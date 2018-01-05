@@ -54,7 +54,7 @@ class JPhraseParser(JanomeWrapper):
         self.phraseReList.append(pattern)
 
 
-    def parse(self,phrase,greedy=False):
+    def parse(self,phrase,greedy=True):
         """
         学習情報を使ってマッチングする
         option :

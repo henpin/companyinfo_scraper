@@ -18,6 +18,8 @@ class JanomeWrapper(object):
 
     def tokenize(self,expr):
         """ Janomeトークない図 """
+        if isinstance(expr,str):
+            expr = expr.decode("utf-8")
         return JanomeWrapper.tokenizer.tokenize(expr)
 
     def extractClass(self,token):
@@ -52,11 +54,14 @@ class JanomeWrapper(object):
         """
         if isinstance(phrase_orTokList,unicode):
             tokList = self.tokenize(phrase_orTokList)
+        elif isinstance(phrase_orTokList,str):
+            tokList = self.tokenize(phrase_orTokList.decode("utf-8"))
         elif isinstance(phrase_orTokList,list):
             tokList = phrase_orTokList
         else :
             raise TypeError("型が違う")
 
         return any( stateFunc(tok) for tok in tokList )
+
 
 
