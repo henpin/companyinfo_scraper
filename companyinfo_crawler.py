@@ -119,7 +119,7 @@ def gen_spider(url,dataList,process_value,snipingScraper) :
 # 定数
 PLACE_PHRASES = [u"本社",u"所在地"] 
 LEADER_PHRASES = [u"代表"] 
-BUSINESS_PHRASES = [u"事業内容"] 
+BUSINESS_PHRASES = [u"事業内容",u"事業案内"] 
 OFFICE_PHRASES = [u"事業所",u"オフィス",u"支社"]
 EMP_PHRASES = [u"従業員数"] 
 
@@ -299,7 +299,7 @@ class App(object):
                 
                 # 事業案内
                 elif match_business(key):
-                    if jsonDict.get("事業内容") :
+                    if jsonDict.get("business") :
                         jsonDict["business"].append(value)
                     else :
                         jsonDict["business"] = [value]
@@ -376,6 +376,7 @@ class App(object):
         # 会社名をgetメソッドで取得
         company_name = cgi.FieldStorage().getfirst("name")
         if not company_name : return
+        company_name +=" 企業情報"
 
         # Googleから会社名の取得
         url = self.find_url(company_name)

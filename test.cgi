@@ -10,4 +10,4 @@ import companyinfo_crawler
 
 
 if __name__ == '__main__' :
-    companyinfo_crawler().cgi()
+    companyinfo_crawler.cgi()
