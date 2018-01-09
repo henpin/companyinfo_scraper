@@ -14,6 +14,7 @@ def load_fromSelenium(url):
     メモリリークが怖いのでここで開いてここで閉じる
     """
     # PhantomJSによるドライバの初期化
+    #driver = webdriver.PhantomJS("/usr/local/bin/phantomjs")
     driver = webdriver.PhantomJS()
     # URL読み込み
     driver.get(url)
