@@ -145,9 +145,9 @@ class JPhraseParser(JanomeWrapper):
 class App(object):
     def main(self):
         parser = JPhraseParser()
-        parser.addRePhrase(u"代表取締役社長兼CEO|代表取締役社長|代表取締役")
+        parser.addRePhrase(u"代表取締役社長執行役員|代表取締役社長兼CEO|代表取締役社長|代表取締役")
         parser.addRePhrase(u"〒[0-9]+[-][0-9]+")
-        result = parser.parse(u"代表取締役社長兼CEO山口智雄" ,True)
+        result = parser.parse(u"代表取締役 社長執行役員 山口智雄" ,True)
 
         for tok in result :
             print tok

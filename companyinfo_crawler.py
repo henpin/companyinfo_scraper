@@ -119,7 +119,8 @@ def gen_spider(url,dataList,process_value,snipingScraper) :
 # 定数
 PLACE_PHRASES = [u"本社",u"所在地"] 
 LEADER_PHRASES = [u"代表"] 
-BUSINESS_PHRASES = [u"事業内容",u"事業案内"] 
+OFFICER_PHRASES = [u"役員"]
+BUSINESS_PHRASES = [u"事業内容",u"事業案内",u"主業務"] 
 OFFICE_PHRASES = [u"事業所",u"オフィス",u"支社"]
 EMP_PHRASES = [u"従業員数"] 
 
@@ -135,6 +136,7 @@ class CompanyInfoScraper(LinerScraper):
             ScrapeTarget(LEADER_PHRASES , r"\S"),
             ScrapeTarget(BUSINESS_PHRASES , r"\S"),
             ScrapeTarget(OFFICE_PHRASES  , r"\S"),
+            ScrapeTarget(OFFICER_PHRASES  , r"\S"),
             ScrapeTarget(EMP_PHRASES, r"[0-9]+")
         ] 
         # 追加
@@ -145,7 +147,7 @@ class MyJPhraseParser(JPhraseParser):
     def __init__(self):
         # 基底クラスの初期化
         JPhraseParser.__init__(self)
-        self.addRePhrase(u"代表取締役社長|代表取締役")
+        self.addRePhrase(u"代表取締役社長執行役員|代表取締役社長兼CEO|代表取締役社長|代表取締役")
         self.addRePhrase(u"〒[0-9]+[-][0-9]+")
 
 
@@ -250,6 +252,7 @@ class App(object):
         # 判定関数
         match_leader = self.gen_keywordMatcher(LEADER_PHRASES)
         match_place = self.gen_keywordMatcher(PLACE_PHRASES)
+        match_officer = self.gen_keywordMatcher(OFFICER_PHRASES)
         match_business = self.gen_keywordMatcher(BUSINESS_PHRASES)
         match_office = self.gen_keywordMatcher(OFFICE_PHRASES)
         match_emp = self.gen_keywordMatcher(EMP_PHRASES)
@@ -283,6 +286,19 @@ class App(object):
                         value = "".join(phraseList)
                     jsonDict["position"] = key
                     jsonDict["ceo_name"] = value
+                
+                # 役員から社長名探し
+                elif match_officer(key):
+                    for phrase in value.split("\n"):
+                        # 値から役職抽出
+                        phraseList = [ phrase.encode("utf-8") for phrase in jParser.parse(value) ] # 名詞句解析
+                        key_val = filter(match_leader, phraseList) # キーとなり得る値を見つける
+                        if key_val :
+                            key = key_val[0]
+                            phraseList.remove(key)
+                            value = "".join(phraseList)
+                            jsonDict["position"] = key
+                            jsonDict["ceo_name"] = value
 
                 # 本社探し
                 elif match_place(key):
@@ -389,7 +405,7 @@ class App(object):
 
     def main(self):
         """ エントリーポイント"""
-        company_name = "ISO総合研究所"
+        company_name = "東都システム開発株式会社"
         # Googleから会社名の取得
         url = self.find_url(company_name)
         # クローリング
