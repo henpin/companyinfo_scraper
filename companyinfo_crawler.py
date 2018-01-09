@@ -289,9 +289,9 @@ class App(object):
                 
                 # 役員から社長名探し
                 elif match_officer(key):
-                    for phrase in value.split("\n"):
+                    for val in value.split("\n"):
                         # 値から役職抽出
-                        phraseList = [ phrase.encode("utf-8") for phrase in jParser.parse(value) ] # 名詞句解析
+                        phraseList = [ phrase.encode("utf-8") for phrase in jParser.parse(val) ] # 名詞句解析
                         key_val = filter(match_leader, phraseList) # キーとなり得る値を見つける
                         if key_val :
                             key = key_val[0]
@@ -358,7 +358,7 @@ class App(object):
     def debug_print(self):
         """ デバッグプリント """
         # 会社名
-        print "\n\n %s \n" % (company_name,)
+        #print "\n\n %s \n" % (company_name,)
 
         # アイテムのほうのリスト
         allItems = filter(lambda data : not isinstance(data,ListDict),self.dataList)
@@ -378,7 +378,7 @@ class App(object):
         # 結果を出力
         for item in filter(lambda data : isinstance(data,ListDict),self.dataList):
             if ( isinstance(item,ListDict) ) :
-                for key, val in item.dict.items() :
+                for key, val in item.items() :
                     print key +": " +"\n\t".join(val) +"\n--------------------\n"
 
         for item in allItems :
@@ -411,7 +411,7 @@ class App(object):
         # クローリング
         self.doCrawl(url)
 
-        #self.debug_print()
+        self.debug_print()
         self.convert2JSON(True)
 
 
